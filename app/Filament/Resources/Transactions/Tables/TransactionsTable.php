@@ -18,33 +18,24 @@ class TransactionsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('items'))
             ->columns([
                 TextColumn::make('member.full_name')
+                    ->label("Член")
                     ->searchable(),
-                TextColumn::make('items')
+               TextColumn::make('items')
                     ->label('Items')
-                    ->formatStateUsing(function ($record) {
-                        if (! method_exists($record, 'items') && ! property_exists($record, 'items')) {
-                            return '-';
-                        }
-                        
-                        $items = $record->items;
-                        
-                        if (blank($items)) {
-                            return '-';
-                        }
-
-                        $uniqueItems = $items->unique('id');
-
-                        // Output: "ItemName1 (2), ItemName2 (5)"
-                        return $uniqueItems->map(function ($item) {
-                            $qty = $item->pivot->quantity ?? null;
-
-                            return $item->name.(isset($qty) ? " ({$qty})" : '');
-                        })->implode(', ');
+                    ->getStateUsing(function ($record) {
+                        return $record->items->map(function ($item) {
+                            return $item->name . ' (' . $item->pivot->quantity . ')';
+                        })->join(', ');
                     })
                     ->wrap()
-                    ->searchable(),
+                    ->searchable(query: function ($query, $search) {
+                        return $query->whereHas('items', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                    }),
                 TextColumn::make('type')
                     ->label("Статус")
                     ->sortable()
@@ -65,9 +56,11 @@ class TransactionsTable
                             default => null,
                         }),
                 TextColumn::make('transaction_date')
+                    ->label("Дата на задавање")
                     ->date()
                     ->sortable(),
                 TextColumn::make('user.name')
+                    ->label("Креирано од")
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

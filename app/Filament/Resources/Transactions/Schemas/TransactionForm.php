@@ -8,6 +8,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Schema;
 
 class TransactionForm
@@ -62,8 +63,7 @@ class TransactionForm
                 Textarea::make('notes')
                     ->columnSpanFull(),
 
-                Select::make('user_id')
-                    ->relationship('user', 'name')
+                Hidden::make('user_id')
                     ->default(auth()->id()),
             ]);
     }

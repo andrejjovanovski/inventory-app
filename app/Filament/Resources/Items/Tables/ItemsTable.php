@@ -9,6 +9,8 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
+
 
 class ItemsTable
 {
@@ -40,7 +42,10 @@ class ItemsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('category')
+                        ->relationship('category', 'name')
+                        ->searchable()
+                        ->preload(),
             ])
             ->recordActions([
                 ViewAction::make(),
