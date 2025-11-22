@@ -13,6 +13,10 @@ class Member extends Model
 
     protected $fillable = [
         'full_name',
+        'national_id',
+        'passport_number',
+        'passport_expiration_date',
+        'is_email_verified',
         'date_of_birth',
         'gender',
         'parent_name',

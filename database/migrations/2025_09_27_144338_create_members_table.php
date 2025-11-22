@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('national_id')->unique()->nullable();
+            $table->string('embg')->unique()->nullable();
             $table->string('passport_number')->unique()->nullable();
             $table->date('passport_expiration_date')->nullable();
             $table->string('date_of_birth')->nullable();
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email')->unique();
-            $table->boolean('is_email_verified')->unique();
+            $table->boolean('is_email_verified')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

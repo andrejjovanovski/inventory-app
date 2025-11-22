@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->constrained()->onDelete('cascade');
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity')->default(1);
             $table->enum('type', ['assigned', 'returned'])->default('assigned');
             $table->date('transaction_date');
             $table->text('notes')->nullable();

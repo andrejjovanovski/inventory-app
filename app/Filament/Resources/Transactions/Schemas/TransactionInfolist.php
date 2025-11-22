@@ -34,9 +34,6 @@ class TransactionInfolist
                 TextEntry::make('updated_at')
                     ->dateTime()
                     ->placeholder('-'),
-                TextEntry::make('deleted_at')
-                    ->dateTime()
-                    ->visible(fn (Transaction $record): bool => $record->trashed()),
             ]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Items\Schemas;
 
-use App\Models\Item;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
@@ -23,9 +22,6 @@ class ItemInfolist
                 TextEntry::make('description')
                     ->placeholder('-')
                     ->columnSpanFull(),
-                TextEntry::make('deleted_at')
-                    ->dateTime()
-                    ->visible(fn (Item $record): bool => $record->trashed()),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

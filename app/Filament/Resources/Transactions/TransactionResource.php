@@ -22,7 +22,6 @@ class TransactionResource extends Resource
 
     protected static string|null|\UnitEnum $navigationGroup = 'Inventory Management';
 
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Transaction';

@@ -4,8 +4,8 @@ namespace App\Filament\Resources\Items\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class ItemForm
@@ -27,7 +27,7 @@ class ItemForm
                     ->required()
                     ->reactive()
                     ->unique('items', 'slug')
-                    ->disabled(),
+                    ->readOnly(),
                 Select::make('category_id')
                     ->relationship('category', 'name')
                     ->required(),

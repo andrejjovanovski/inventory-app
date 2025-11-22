@@ -107,8 +107,10 @@ class MembersRelationManager extends RelationManager
                     }),
                 ViewAction::make()
                     ->schema([
-                        TextInput::make('full_name')->label('EMBG'),
-                        TextInput::make('date_of_birth')->label('Passport No'),
+                        TextInput::make('embg')->label('EMBG'),
+                        TextInput::make('national_id')->label('Број на лична карта'),
+                        TextInput::make('passport_number')->label('Број на пасош'),
+                        TextInput::make('passport_expiration_date')->label('Важи до:'),
                     ]),
                 //                    ->url(fn ($record) => MemberResource::getUrl('view', ['record' => $record->id]))
                 //                    ->openUrlInNewTab(false),

@@ -27,6 +27,12 @@ class MemberForm
 
                 TextInput::make('parent_name'),
 
+                TextInput::make('national_id'),
+
+                TextInput::make('passport_number'),
+
+                DatePicker::make('passport_expiration_date'),
+
                 TextInput::make('address'),
 
                 TextInput::make('phone_number')

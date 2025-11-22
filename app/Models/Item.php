@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-
     protected $fillable = [
         'image',
         'name',
@@ -21,7 +19,7 @@ class Item extends Model
 
     public function transactions(): BelongsToMany
     {
-        return $this->belongsToMany(Transaction::class)
+        return $this->belongsToMany(Transaction::class, 'item_transaction')
             ->withPivot('quantity')
             ->withTimestamps();
     }
