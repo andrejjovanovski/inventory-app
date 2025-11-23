@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class ItemForm
 {
@@ -17,11 +18,12 @@ class ItemForm
                 FileUpload::make('image')
                     ->image()
                     ->required(),
-                TextInput::make('name')
+                    TextInput::make('name')
                     ->required()
                     ->reactive()
+                    ->lazy()
                     ->afterStateUpdated(function ($state, callable $set) {
-                        $set('slug', \Str::slug($state));
+                        $set('slug', Str::slug($state));
                     }),
                 TextInput::make('slug')
                     ->required()

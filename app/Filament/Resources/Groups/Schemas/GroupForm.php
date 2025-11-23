@@ -10,12 +10,9 @@ class GroupForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('name')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-            ]);
+        return $schema->components([
+            TextInput::make("name")->required(),
+            Textarea::make("description")->columnSpanFull(),
+        ]);
     }
 }
