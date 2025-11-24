@@ -9,21 +9,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Item extends Model
 {
     protected $fillable = [
-        'image',
-        'name',
-        'slug',
-        'description',
-        'category_id',
-        'quantity',
+        "image",
+        "name",
+        "slug",
+        "description",
+        "category_id",
+        "quantity",
     ];
 
     public function transactions(): BelongsToMany
     {
-        return $this->belongsToMany(Transaction::class, 'item_transaction')
-            ->withPivot('quantity')
+        return $this->belongsToMany(Transaction::class, "item_transaction")
+            ->withPivot("quantity")
             ->withTimestamps();
     }
-
+    /**
+     * @return BelongsTo<Category,Item>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
