@@ -32,7 +32,6 @@ class AdminPanelProvider extends PanelProvider
             ->id("admin")
             ->path("admin")
             ->login()
-            ->topNavigation()
             ->brandName("Српски Вез")
             //            ->brandLogo("/images/logo.png")
             //            ->brandLogoHeight("20rem")
