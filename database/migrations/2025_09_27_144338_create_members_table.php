@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->string("email")->unique();
             $table->boolean("is_email_verified")->default(0);
             $table->boolean("is_active")->default(1);
+            $table->foreignId("created_by")->constrained("users");
             $table->softDeletes();
             $table->timestamps();
         });

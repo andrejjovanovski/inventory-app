@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Members\Tables;
 
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -18,6 +19,7 @@ class MembersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with("creator", "groups"))
             ->columns([
                 TextColumn::make("full_name")->searchable(),
                 TextColumn::make("date_of_birth")->searchable(),
@@ -26,6 +28,12 @@ class MembersTable
                 TextColumn::make("parent_name")->toggleable()->searchable(),
                 TextColumn::make("address")->toggleable()->searchable(),
                 TextColumn::make("phone_number")->toggleable()->searchable(),
+                TextColumn::make("embg")->toggleable()->searchable(),
+                TextColumn::make("creator.name")
+                    ->label("Created By")
+                    ->toggleable()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make("email")
                     ->label("Email address")
                     ->toggleable()
@@ -36,7 +44,7 @@ class MembersTable
                     ->sortable()
                     ->toggleable(),
                 IconColumn::make("is_passport_valid")
-                    ->label("Status")
+                    ->label("Passport Status")
                     ->getStateUsing(function ($record) {
                         $expiration = $record->passport_expiration_date;
 
@@ -100,6 +108,25 @@ class MembersTable
                             $expiration->format("d.m.Y") .
                             ")";
                     }),
+                IconColumn::make("is_active")
+                    ->icon(
+                        fn($state) => match ($state) {
+                            0 => "heroicon-o-check-circle",
+                            1 => "heroicon-o-check-circle",
+                        },
+                    )
+                    ->color(
+                        fn($state) => match ($state) {
+                            0 => "danger",
+                            1 => "success",
+                        },
+                    )
+                    ->tooltip(
+                        fn($state) => match ($state) {
+                            0 => "Member is deactivated",
+                            1 => "Member is active",
+                        },
+                    ),
                 TextColumn::make("created_at")
                     ->dateTime()
                     ->sortable()
@@ -110,7 +137,9 @@ class MembersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([TrashedFilter::make()])
-            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->recordActions([
+                ActionGroup::make([ViewAction::make(), EditAction::make()]),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

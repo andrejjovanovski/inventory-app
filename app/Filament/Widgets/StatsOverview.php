@@ -13,9 +13,10 @@ class StatsOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-            Stat::make("Active members", Member::query()->count())->icon(
-                "heroicon-m-user",
-            ),
+            Stat::make(
+                "Active members",
+                Member::query()->where("is_active", "=", 1)->count(),
+            )->icon("heroicon-m-user"),
             Stat::make("Active groups", Group::query()->count())->icon(
                 "heroicon-m-user-group",
             ),
