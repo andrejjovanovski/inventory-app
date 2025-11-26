@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Broadcasting
@@ -14,8 +13,7 @@ return [
     |
     */
 
-    'broadcasting' => [
-
+    "broadcasting" => [
         // 'echo' => [
         //     'broadcaster' => 'pusher',
         //     'key' => env('VITE_PUSHER_APP_KEY'),
@@ -28,7 +26,6 @@ return [
         //     'encrypted' => true,
         //     'forceTLS' => true,
         // ],
-
     ],
 
     /*
@@ -41,7 +38,7 @@ return [
     |
     */
 
-    'default_filesystem_disk' => env('FILESYSTEM_DISK', 'local'),
+    "default_filesystem_disk" => env("FILESYSTEM_DISK", "local"),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +52,7 @@ return [
     |
     */
 
-    'assets_path' => null,
+    "assets_path" => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +66,7 @@ return [
     |
     */
 
-    'cache_path' => base_path('bootstrap/cache/filament'),
+    "cache_path" => base_path("bootstrap/cache/filament"),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,7 +81,7 @@ return [
     |
     */
 
-    'livewire_loading_delay' => 'default',
+    "livewire_loading_delay" => "default",
 
     /*
     |--------------------------------------------------------------------------
@@ -101,8 +98,8 @@ return [
     |
     */
 
-    'file_generation' => [
-        'flags' => [],
+    "file_generation" => [
+        "flags" => [],
     ],
 
     /*
@@ -115,6 +112,7 @@ return [
     |
     */
 
-    'system_route_prefix' => 'filament',
+    "system_route_prefix" => "filament",
 
+    "favicon" => "/images/logo.png",
 ];

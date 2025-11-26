@@ -16,17 +16,19 @@ class MemberForm
         return $schema->components([
             TextInput::make("full_name")->required(),
 
-            DatePicker::make("date_of_birth"),
+            DatePicker::make("date_of_birth")->required(),
 
-            Select::make("gender")->options([
-                "male" => "Машко",
-                "female" => "Женско",
-                "other" => "Друго",
-            ]),
+            Select::make("gender")
+                ->options([
+                    "male" => "Машко",
+                    "female" => "Женско",
+                    "other" => "Друго",
+                ])
+                ->required(),
 
-            TextInput::make("parent_name"),
+            TextInput::make("parent_name")->required(),
 
-            TextInput::make("embg"),
+            TextInput::make("embg")->required(),
 
             TextInput::make("national_id"),
 
@@ -46,6 +48,7 @@ class MemberForm
             Hidden::make("created_by")->default(fn() => Auth::id()),
 
             Select::make("groups")
+                ->required()
                 ->relationship("groups", "name")
                 ->preload()
                 ->multiple()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Members\Tables;
 
+use App\Models\Member;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -9,10 +10,12 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 
 class MembersTable
 {
@@ -113,18 +116,21 @@ class MembersTable
                         fn($state) => match ($state) {
                             0 => "heroicon-o-check-circle",
                             1 => "heroicon-o-check-circle",
+                            default => "heroicon-o-question-mark-circle",
                         },
                     )
                     ->color(
                         fn($state) => match ($state) {
                             0 => "danger",
                             1 => "success",
+                            default => "gray",
                         },
                     )
                     ->tooltip(
                         fn($state) => match ($state) {
                             0 => "Member is deactivated",
                             1 => "Member is active",
+                            default => "Member status unknown",
                         },
                     ),
                 TextColumn::make("created_at")
@@ -138,7 +144,39 @@ class MembersTable
             ])
             ->filters([TrashedFilter::make()])
             ->recordActions([
-                ActionGroup::make([ViewAction::make(), EditAction::make()]),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    Action::make("toggleActive")
+                        ->label(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                                ? "Deactivate"
+                                : "Activate",
+                        )
+                        ->icon(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                                ? "heroicon-o-x-mark"
+                                : "heroicon-o-check",
+                        )
+                        ->color(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                                ? "danger"
+                                : "success",
+                        )
+                        ->requiresConfirmation()
+                        ->action(function (Member $record) {
+                            $current = (int) $record->getAttribute("is_active");
+                            $record->update([
+                                "is_active" => $current ? 0 : 1,
+                            ]);
+                        }),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

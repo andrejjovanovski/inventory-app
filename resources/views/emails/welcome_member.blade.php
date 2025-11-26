@@ -30,7 +30,7 @@
                                 <rect width="100%" height="120" fill="url(#folkRB)"/>
 
                                 <!-- Logo centered on top -->
-                                <image x="50%" y="30" width="200" height="200" style="transform: translateX(-50%);"
+                                <image x="50%" y="10" width="150" height="150" style="transform: translateX(-50%);"
                                        href="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" />
                             </svg>
                         </td>
@@ -76,6 +76,5 @@
             </td>
         </tr>
     </table>
-
 </body>
 </html>
