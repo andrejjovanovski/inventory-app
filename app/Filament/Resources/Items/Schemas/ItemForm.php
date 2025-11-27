@@ -18,7 +18,7 @@ class ItemForm
                 FileUpload::make('image')
                     ->image()
                     ->required(),
-                    TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->reactive()
                     ->lazy()
@@ -34,6 +34,10 @@ class ItemForm
                     ->relationship('category', 'name')
                     ->required(),
                 TextInput::make('quantity')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                TextInput::make('fixed_quantity')
                     ->required()
                     ->numeric()
                     ->default(0),

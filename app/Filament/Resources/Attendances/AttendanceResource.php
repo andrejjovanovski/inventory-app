@@ -6,10 +6,12 @@ use App\Filament\Resources\Attendances\Pages\CreateAttendance;
 use App\Filament\Resources\Attendances\Pages\EditAttendance;
 use App\Filament\Resources\Attendances\Pages\ListAttendances;
 use App\Filament\Resources\Attendances\Pages\ViewAttendance;
+use App\Filament\Resources\Attendances\RelationManagers\MembersRelationManager;
 use App\Filament\Resources\Attendances\Schemas\AttendanceForm;
 use App\Filament\Resources\Attendances\Schemas\AttendanceInfolist;
 use App\Filament\Resources\Attendances\Tables\AttendancesTable;
 use App\Models\Attendance;
+use App\Models\Member;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -42,8 +44,8 @@ class AttendanceResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            MembersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

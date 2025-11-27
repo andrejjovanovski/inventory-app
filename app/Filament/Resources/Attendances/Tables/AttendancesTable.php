@@ -26,14 +26,13 @@ class AttendancesTable
                 TextColumn::make('end_time')
                     ->time()
                     ->sortable(),
-                TextColumn::make('mentor_id')
-                    ->numeric()
+                TextColumn::make('mentor.name')
                     ->sortable(),
-                TextColumn::make('group_id')
-                    ->numeric()
+                TextColumn::make('group.name')
+                    ->badge()
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
+                TextColumn::make('creator.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

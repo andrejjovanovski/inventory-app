@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Member::class, "created_by");
     }
+
+    public function attendance(): HasMany
+    {
+        return $this->hasMany(Attendance::class, "created_by");
+    }
+
+    public function mentorAttendance(): HasMany
+    {
+        return $this->hasMany(Attendance::class, "mentor_id");
+    }
 }
