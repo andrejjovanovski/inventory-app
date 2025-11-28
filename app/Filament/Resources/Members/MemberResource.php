@@ -38,8 +38,8 @@ class MemberResource extends Resource
         return MembersTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(
+    ): array {
         return [TransactionsRelationManager::class];
     }
 

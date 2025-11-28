@@ -12,6 +12,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -24,6 +25,19 @@ class MembersTable
         return $table
             ->modifyQueryUsing(fn($query) => $query->with("creator", "groups"))
             ->columns([
+                ImageColumn::make("image_path")
+                    ->label("Photo")
+                    ->circular()
+                    ->toggleable()
+                    ->size(40)
+                    ->placeholder(
+                        fn(
+                        Member $record,
+                    ) => strtoupper(
+                            substr($record->full_name, 0, 1),
+                        ),
+                    ),
+                TextColumn::make("badge_number")->badge()->searchable()->toggleable(),
                 TextColumn::make("full_name")->searchable(),
                 TextColumn::make("date_of_birth")->searchable(),
                 TextColumn::make("groups.name")->badge()->searchable(),
@@ -48,6 +62,7 @@ class MembersTable
                     ->toggleable(),
                 IconColumn::make("is_passport_valid")
                     ->label("Passport Status")
+                    ->toggleable()
                     ->getStateUsing(function ($record) {
                         $expiration = $record->passport_expiration_date;
 
@@ -152,22 +167,22 @@ class MembersTable
                             fn(Member $record) => (bool) $record->getAttribute(
                                 "is_active",
                             )
-                                ? "Deactivate"
-                                : "Activate",
+                            ? "Deactivate"
+                            : "Activate",
                         )
                         ->icon(
                             fn(Member $record) => (bool) $record->getAttribute(
                                 "is_active",
                             )
-                                ? "heroicon-o-x-mark"
-                                : "heroicon-o-check",
+                            ? "heroicon-o-x-mark"
+                            : "heroicon-o-check",
                         )
                         ->color(
                             fn(Member $record) => (bool) $record->getAttribute(
                                 "is_active",
                             )
-                                ? "danger"
-                                : "success",
+                            ? "danger"
+                            : "success",
                         )
                         ->requiresConfirmation()
                         ->action(function (Member $record) {

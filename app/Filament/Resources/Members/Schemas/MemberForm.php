@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Members\Schemas;
 
 // Import Schema class required for the configure method signature
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -16,6 +17,8 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
+
 
 /**
  * This class provides the component array for the Member form.
@@ -45,7 +48,7 @@ class MemberForm
                                         // Left column: Image
                                         FileUpload::make('image_path')
                                             ->label('Image')
-                                            ->directory('members')
+                                            ->directory(fn($get) => 'members/' . ($get('id') ?? 'new') . '/image')
                                             ->maxSize(2048)
                                             ->imageEditor()
                                             ->imagePreviewHeight(213)
@@ -105,48 +108,68 @@ class MemberForm
                         Section::make("Contact Information")
                             ->schema([
                                 TextInput::make('address')
-                                    ->label('Address'),
+                                    ->label('Address')
+                                    ->required(),
 
                                 TextInput::make('phone_number')
                                     ->label('Phone Number')
-                                    ->tel(),
+                                    ->tel()
+                                    ->required(),
 
                                 TextInput::make('email')
                                     ->label('Email Address')
                                     ->email()
+                                    ->helperText('Маил адресата ќе служи како корисничко име за најава!')
                                     ->required(),
                             ]),
 
                         Hidden::make('created_by')
                             ->default(fn() => Auth::id()),
 
-                        Grid::make(2) // 2 columns
+                        Section::make('Additional Information')
                             ->schema([
-                                // Left column can be empty to push field to right
-                                // Use a placeholder or just leave first column empty
-                                Grid::make()->schema([])->columnSpan(1),
+                                Group::make()
+                                    ->schema([
+                                        DatePicker::make('joining_date')
+                                            ->required(),
 
-                                // Right column: the field
-                                Select::make('groups')
-                                    ->required()
-                                    ->relationship('groups', 'name')
-                                    ->preload()
-                                    ->multiple()
-                                    ->searchable()
-                                    ->helperText('Изберете група на која припаѓа членот')
-                                    ->columnSpan(1),
-                            ])
-                            ->columnSpan('full'),
+                                        Select::make('groups')
+                                            ->required()
+                                            ->relationship('groups', 'name')
+                                            ->preload()
+                                            ->multiple()
+                                            ->searchable()
+                                            ->helperText('Изберете група на која припаѓа членот')
+                                            ->columnSpan(1),
+                                    ])
+                                    ->columns(2)
+                                    ->columnSpan('full'),
+                                Textarea::make('notes')
+                                    ->label('Notes')
+                                    ->rows(5)
+                                    ->columnSpan('full'),
+                            ]),
                     ]),
 
                 // Step 2 (Index 1): Parent Info (only if under 18)
                 Step::make('Parent Info')
                     ->schema([
                         TextInput::make('parent_name')
-                            ->label('Parent / Guardian Name')
-                            ->required(),
+                            ->label('Parent / Guardian Full Name')
+                            ->required(fn($get) => MemberForm::isUnder18($get('date_of_birth'))),
+
                         TextInput::make('parent_phone')
-                            ->label('Parent / Guardian Phone'),
+                            ->label('Parent / Guardian Phone')
+                            ->required(fn($get) => MemberForm::isUnder18($get('date_of_birth'))),
+
+                        TextInput::make('parent_email')
+                            ->label('Parent / Guardian Email')
+                            ->email()
+                            ->required(fn($get) => MemberForm::isUnder18($get('date_of_birth'))),
+
+                        TextInput::make('parent_embg')
+                            ->label('Parent / Guardian EMBG')
+                            ->required(fn($get) => MemberForm::isUnder18($get('date_of_birth'))),
                     ])
                     ->visible(function ($get) {
                         $dob = $get('date_of_birth');
@@ -167,13 +190,28 @@ class MemberForm
                         FileUpload::make('documents')
                             ->label('Member Documents')
                             ->multiple()
-                            ->directory('members')
+                            ->directory(fn($get) => $get('id') ? "members/{$get('id')}/documents" : "members/new/documents")
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(2048),
+                            ->maxSize(2048)
+                            ->columnSpan('full')
+                            ->openable()
+                            ->downloadable()
+                            ->dehydrated(true), // Keep dehydrated(true) if necessary, but often not needed for FileUpload
+
                     ]),
             ])
                 ->reactive()
                 ->columnSpan('full'),
         ]);
+    }
+
+    public static function isUnder18($dob): bool
+    {
+        if (!$dob) {
+            return false;
+        }
+
+        $dob = $dob instanceof Carbon ? $dob : Carbon::parse($dob);
+        return $dob->diffInYears(now()) < 18;
     }
 }

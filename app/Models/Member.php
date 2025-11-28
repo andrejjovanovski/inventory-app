@@ -26,6 +26,15 @@ class Member extends Model
         "phone_number",
         "email",
         "embg",
+        'documents',
+        'image_path',
+        "badge_number",
+        "nid_expiration_date",
+        "joining_date",
+        "notes",
+        "parent_email",
+        "parent_phone",
+        "parent_embg",
         "is_active",
         "created_by",
     ];
@@ -34,7 +43,24 @@ class Member extends Model
         "embg" => "encrypted",
         "passport_number" => "encrypted",
         "national_id" => "encrypted",
+        "documents" => "array",
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($member) {
+            // Get latest numeric badge number
+            $lastBadge = self::max('badge_number');
+
+            // Convert to int or default to 0
+            $next = $lastBadge ? intval($lastBadge) + 1 : 1;
+
+            // Pad with leading zeros to ensure 3 digits
+            $member->badge_number = str_pad($next, 3, '0', STR_PAD_LEFT);
+        });
+    }
 
     public function groups(): BelongsToMany
     {
