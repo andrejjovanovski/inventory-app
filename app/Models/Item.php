@@ -13,6 +13,7 @@ class Item extends Model
         "name",
         "slug",
         "description",
+        "fixed_quantity",
         "category_id",
         "quantity",
     ];

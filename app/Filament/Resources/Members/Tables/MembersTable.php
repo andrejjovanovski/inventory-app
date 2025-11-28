@@ -2,23 +2,42 @@
 
 namespace App\Filament\Resources\Members\Tables;
 
+use App\Models\Member;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 
 class MembersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with("creator", "groups"))
             ->columns([
+                ImageColumn::make("image_path")
+                    ->label("Photo")
+                    ->circular()
+                    ->toggleable()
+                    ->size(40)
+                    ->placeholder(
+                        fn(
+                        Member $record,
+                    ) => strtoupper(
+                            substr($record->full_name, 0, 1),
+                        ),
+                    ),
+                TextColumn::make("badge_number")->badge()->searchable()->toggleable(),
                 TextColumn::make("full_name")->searchable(),
                 TextColumn::make("date_of_birth")->searchable(),
                 TextColumn::make("groups.name")->badge()->searchable(),
@@ -26,6 +45,12 @@ class MembersTable
                 TextColumn::make("parent_name")->toggleable()->searchable(),
                 TextColumn::make("address")->toggleable()->searchable(),
                 TextColumn::make("phone_number")->toggleable()->searchable(),
+                TextColumn::make("embg")->toggleable()->searchable(),
+                TextColumn::make("creator.name")
+                    ->label("Created By")
+                    ->toggleable()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make("email")
                     ->label("Email address")
                     ->toggleable()
@@ -36,7 +61,8 @@ class MembersTable
                     ->sortable()
                     ->toggleable(),
                 IconColumn::make("is_passport_valid")
-                    ->label("Status")
+                    ->label("Passport Status")
+                    ->toggleable()
                     ->getStateUsing(function ($record) {
                         $expiration = $record->passport_expiration_date;
 
@@ -100,6 +126,28 @@ class MembersTable
                             $expiration->format("d.m.Y") .
                             ")";
                     }),
+                IconColumn::make("is_active")
+                    ->icon(
+                        fn($state) => match ($state) {
+                            0 => "heroicon-o-check-circle",
+                            1 => "heroicon-o-check-circle",
+                            default => "heroicon-o-question-mark-circle",
+                        },
+                    )
+                    ->color(
+                        fn($state) => match ($state) {
+                            0 => "danger",
+                            1 => "success",
+                            default => "gray",
+                        },
+                    )
+                    ->tooltip(
+                        fn($state) => match ($state) {
+                            0 => "Member is deactivated",
+                            1 => "Member is active",
+                            default => "Member status unknown",
+                        },
+                    ),
                 TextColumn::make("created_at")
                     ->dateTime()
                     ->sortable()
@@ -110,7 +158,41 @@ class MembersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([TrashedFilter::make()])
-            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    Action::make("toggleActive")
+                        ->label(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                            ? "Deactivate"
+                            : "Activate",
+                        )
+                        ->icon(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                            ? "heroicon-o-x-mark"
+                            : "heroicon-o-check",
+                        )
+                        ->color(
+                            fn(Member $record) => (bool) $record->getAttribute(
+                                "is_active",
+                            )
+                            ? "danger"
+                            : "success",
+                        )
+                        ->requiresConfirmation()
+                        ->action(function (Member $record) {
+                            $current = (int) $record->getAttribute("is_active");
+                            $record->update([
+                                "is_active" => $current ? 0 : 1,
+                            ]);
+                        }),
+                ]),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

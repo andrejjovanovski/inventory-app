@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Transactions\Schemas;
 
+use App\Models\Member;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -17,7 +18,29 @@ class TransactionForm
     {
         return $schema->components([
             Select::make("member_id")
-                ->relationship("member", "full_name")
+                ->label("Member")
+                ->reactive()
+                ->searchable()
+                ->options(
+                    fn(callable $get) => Member::with("groups")
+                        ->when(
+                            $get("group_id"),
+                            fn($query, $groupId) => $query->whereHas(
+                                "groups",
+                                fn($q) => $q->where("groups.id", $groupId),
+                            ),
+                        )
+                        ->get()
+                        ->mapWithKeys(function ($member) {
+                            $groupNames = $member->groups
+                                ->pluck("name")
+                                ->join(", ");
+                            return [
+                                $member->id => "{$member->full_name} ({$groupNames})",
+                            ];
+                        })
+                        ->toArray(),
+                )
                 ->required(),
 
             Repeater::make("transaction_items")
@@ -65,7 +88,7 @@ class TransactionForm
 
             Textarea::make("notes")->columnSpanFull(),
 
-            Hidden::make("user_id")->default(fn() => Auth::id()),
+            Hidden::make("user_id")->default([Auth::class, "id"]),
         ]);
     }
 }

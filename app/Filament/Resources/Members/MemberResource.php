@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Members;
 
-use App\Filament\Resources\Events\Pages\ViewMember;
+use App\Filament\Resources\Members\Pages\ViewMember;
 use App\Filament\Resources\Members\Pages\CreateMember;
 use App\Filament\Resources\Members\Pages\EditMember;
 use App\Filament\Resources\Members\Pages\ListMembers;
@@ -22,11 +22,11 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
-    protected static string|null|\UnitEnum $navigationGroup = 'User Management';
+    protected static string|null|\UnitEnum $navigationGroup = "User Management";
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static ?string $recordTitleAttribute = 'Member';
+    protected static ?string $recordTitleAttribute = "Member";
 
     public static function form(Schema $schema): Schema
     {
@@ -38,28 +38,25 @@ class MemberResource extends Resource
         return MembersTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            TransactionsRelationManager::class,
-        ];
+    public static function getRelations(
+    ): array {
+        return [TransactionsRelationManager::class];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListMembers::route('/'),
-            'create' => CreateMember::route('/create'),
-            'edit' => EditMember::route('/{record}/edit'),
-            'view' => ViewMember::route('/{record}'),
+            "index" => ListMembers::route("/"),
+            "create" => CreateMember::route("/create"),
+            "edit" => EditMember::route("/{record}/edit"),
+            "view" => ViewMember::route("/{record}"),
         ];
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes(
+            [SoftDeletingScope::class],
+        );
     }
 }

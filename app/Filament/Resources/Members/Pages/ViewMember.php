@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Events\Pages;
+namespace App\Filament\Resources\Members\Pages;
 
 use App\Filament\Resources\Members\MemberResource;
 use Filament\Actions\EditAction;
@@ -12,8 +12,6 @@ class ViewMember extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            EditAction::make(),
-        ];
+        return [EditAction::make()];
     }
 }
