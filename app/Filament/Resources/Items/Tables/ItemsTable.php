@@ -24,8 +24,11 @@ class ItemsTable
                 TextColumn::make('slug')
                     ->searchable(),
                 TextColumn::make('category.name')
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('quantity')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('fixed_quantity')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('deleted_at')
