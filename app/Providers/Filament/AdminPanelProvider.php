@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName("Српски Вез")
             //            ->brandLogo("/images/logo.png")
             //            ->brandLogoHeight("20rem")
+            ->sidebarCollapsibleOnDesktop(true)
             ->favicon("images/logo.png")
             ->colors([
                 "primary" => Color::Amber,
