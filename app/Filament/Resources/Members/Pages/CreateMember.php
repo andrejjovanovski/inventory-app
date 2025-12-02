@@ -34,9 +34,9 @@ class CreateMember extends CreateRecord
             Storage::disk('public')->deleteDirectory("members/new");
         }
 
-        // Send welcome email
+        // Send verification email
         if ($member->email) {
-            Mail::to($member->email)->queue(new WelcomeMemberMail($member));
+            $member->notify(new \App\Notifications\VerifyMemberEmail());
         }
     }
 }

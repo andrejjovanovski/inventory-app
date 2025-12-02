@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, \Illuminate\Notifications\Notifiable;
 
     protected $fillable = [
         "full_name",
@@ -44,6 +44,7 @@ class Member extends Model
         "passport_number" => "encrypted",
         "national_id" => "encrypted",
         "documents" => "array",
+        "is_email_verified" => "boolean",
     ];
 
     protected static function boot()
