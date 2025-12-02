@@ -127,9 +127,10 @@ class MembersTable
                             ")";
                     }),
                 IconColumn::make("is_active")
+                    ->toggleable()
                     ->icon(
                         fn($state) => match ($state) {
-                            0 => "heroicon-o-check-circle",
+                            0 => "heroicon-o-x-circle",
                             1 => "heroicon-o-check-circle",
                             default => "heroicon-o-question-mark-circle",
                         },
@@ -145,6 +146,36 @@ class MembersTable
                         fn($state) => match ($state) {
                             0 => "Member is deactivated",
                             1 => "Member is active",
+                            default => "Member status unknown",
+                        },
+                    ),
+                IconColumn::make("is_email_verified")
+                    ->toggleable()
+                    ->getStateUsing(function ($record) {
+                        $value = $record->is_email_verified;
+                        if ($value === null) {
+                            return null;
+                        }
+                        return (int) $value;
+                    })
+                    ->icon(
+                        fn($state) => match ($state) {
+                            0 => "heroicon-o-x-circle",
+                            1 => "heroicon-o-check-circle",
+                            default => "heroicon-o-question-mark-circle",
+                        },
+                    )
+                    ->color(
+                        fn($state) => match ($state) {
+                            0 => "danger",
+                            1 => "success",
+                            default => "gray",
+                        },
+                    )
+                    ->tooltip(
+                        fn($state) => match ($state) {
+                            0 => "Member email is not verified",
+                            1 => "Member email is verified",
                             default => "Member status unknown",
                         },
                     ),

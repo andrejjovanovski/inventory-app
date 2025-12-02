@@ -30,7 +30,7 @@
                                 <rect width="100%" height="120" fill="url(#folkRB)"/>
 
                                 <!-- Logo centered on top -->
-                                <image x="50%" y="10" width="150" height="150" style="transform: translateX(-50%);"
+                                <image x="50%" y="5" width="150" height="150" style="transform: translateX(-50%);"
                                        href="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" />
                             </svg>
                         </td>
@@ -39,7 +39,6 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding: 30px;">
-
                             <h1 style="font-size:28px; color:#313131; margin:0; text-align:center;">
                                 Верификација имејла
                             </h1>
@@ -63,12 +62,9 @@
                             <p style="text-align:center; margin-top:40px; font-size:12px; color:#999;">
                                 КУД „Српски Вез“ — Сва права задржана.
                             </p>
-
                         </td>
                     </tr>
-
                 </table>
-
             </td>
         </tr>
     </table>
