@@ -36,7 +36,7 @@ class TransactionForm
                                 ->pluck("name")
                                 ->join(", ");
                             return [
-                                $member->id => "{$member->full_name} ({$groupNames})",
+                                $member->id => "#{$member->badge_number} {$member->full_name} ({$groupNames})",
                             ];
                         })
                         ->toArray(),
@@ -74,6 +74,7 @@ class TransactionForm
                 ->columns(2)
                 ->minItems(1)
                 ->defaultItems(1)
+                ->dehydrated(false)
                 ->required(),
 
             Select::make("type")
@@ -88,7 +89,7 @@ class TransactionForm
 
             Textarea::make("notes")->columnSpanFull(),
 
-            Hidden::make("user_id")->default([Auth::class, "id"]),
+            Hidden::make("user_id")->default(fn() => Auth::id()),
         ]);
     }
 }
