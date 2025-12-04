@@ -81,6 +81,7 @@ class MemberForm
                         Section::make("Private Personal Details")
                             ->schema([
                                 TextInput::make('embg')
+                                    ->length(13)
                                     ->label('EMBG')
                                     ->required(),
 
