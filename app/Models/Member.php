@@ -35,6 +35,11 @@ class Member extends Model
         "parent_email",
         "parent_phone",
         "parent_embg",
+        "parent_national_id",
+        "parent_nid_expiration_date",
+        "school_level",
+        "school_name",
+        "ethnicity",
         "is_active",
         "created_by",
     ];
@@ -43,6 +48,7 @@ class Member extends Model
         "embg" => "encrypted",
         "passport_number" => "encrypted",
         "national_id" => "encrypted",
+        "parent_national_id" => "encrypted",
         "documents" => "array",
         "is_email_verified" => "boolean",
     ];

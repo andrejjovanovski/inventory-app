@@ -41,7 +41,15 @@ class MembersTable
                 TextColumn::make("full_name")->searchable(),
                 TextColumn::make("date_of_birth")->searchable(),
                 TextColumn::make("groups.name")->badge()->searchable(),
-                TextColumn::make("gender")->toggleable()->searchable(),
+                TextColumn::make("gender")
+                    ->toggleable()
+                    ->searchable()
+                    ->formatStateUsing(fn(?string $state): ?string => match ($state) {
+                        'male' => 'Машко',
+                        'female' => 'Женско',
+                        'other' => 'Друго',
+                        default => $state,
+                    }),
                 TextColumn::make("parent_name")->toggleable()->searchable(),
                 TextColumn::make("address")->toggleable()->searchable(),
                 TextColumn::make("phone_number")->toggleable()->searchable(),

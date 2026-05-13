@@ -14,25 +14,24 @@
 
                     <!-- Decorative Folk Header with Embedded Logo -->
                     <tr>
-                        <td style="padding:0; text-align:center; background:#ffffff;">
-                            <svg width="100%" height="120" xmlns="http://www.w3.org/2000/svg" style="display:block; margin:0 auto;">
-                                <!-- Pattern -->
-                                <pattern id="folkRB" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
-                                    <rect width="40" height="20" fill="white"/>
-                                    <!-- Red diamond -->
-                                    <rect x="6" y="6" width="8" height="8" fill="#c40000"/>
-                                    <rect x="8" y="8" width="4" height="4" fill="black"/>
-                                    <!-- Blue diamond -->
-                                    <rect x="26" y="6" width="8" height="8" fill="#0033a0"/>
-                                    <rect x="28" y="8" width="4" height="4" fill="black"/>
-                                </pattern>
-
-                                <rect width="100%" height="120" fill="url(#folkRB)"/>
-
-                                <!-- Logo centered on top -->
-                                <image x="50%" y="5" width="150" height="150" style="transform: translateX(-50%);"
-                                       href="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" />
-                            </svg>
+                        <td style="padding:0; background:#ffffff;">
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                    @for ($i = 0; $i < 15; $i++)
+                                        <td width="20" height="20" style="background:#c40000; font-size:0; line-height:0;">&nbsp;</td>
+                                        <td width="20" height="20" style="background:#0033a0; font-size:0; line-height:0;">&nbsp;</td>
+                                    @endfor
+                                </tr>
+                            </table>
+                            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                    <td align="center" style="padding:20px 0;">
+                                        <img src="{{ $message->embed(public_path('images/logo.png')) }}"
+                                             alt="КУД Српски Вез" width="120"
+                                             style="display:block; width:120px; height:auto; border:0; outline:none;">
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
 

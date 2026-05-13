@@ -18,12 +18,12 @@ class AttendanceInfolist
                     ->time(),
                 TextEntry::make('end_time')
                     ->time(),
-                TextEntry::make('mentor_id')
-                    ->numeric(),
-                TextEntry::make('group_id')
-                    ->numeric(),
-                TextEntry::make('created_by')
-                    ->numeric(),
+                TextEntry::make('mentor.name')
+                    ->label('Mentor'),
+                TextEntry::make('group.name')
+                    ->label('Group'),
+                TextEntry::make('creator.name')
+                    ->label('Created By'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->placeholder('-'),

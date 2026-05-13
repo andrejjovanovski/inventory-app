@@ -9,6 +9,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Hidden;
@@ -106,6 +107,30 @@ class MemberForm
                             ->columns(1)
                             ->columnSpan('full'),
 
+                        Section::make('Education & Ethnicity')
+                            ->schema([
+                                Radio::make('school_level')
+                                    ->label('Level of School')
+                                    ->options([
+                                        'primary' => 'Основно',
+                                        'secondary' => 'Средно',
+                                        'university' => 'Факултет',
+                                    ])
+                                    ->inline()
+                                    ->columnSpan('full'),
+
+                                Group::make()
+                                    ->schema([
+                                        TextInput::make('school_name')
+                                            ->label('School Name'),
+
+                                        TextInput::make('ethnicity')
+                                            ->label('Ethnicity'),
+                                    ])->columns(2)->columnSpan('full'),
+                            ])
+                            ->columns(1)
+                            ->columnSpan('full'),
+
                         Section::make("Contact Information")
                             ->schema([
                                 TextInput::make('address')
@@ -171,6 +196,15 @@ class MemberForm
                         TextInput::make('parent_embg')
                             ->label('Parent / Guardian EMBG')
                             ->required(fn($get) => MemberForm::isUnder18($get('date_of_birth'))),
+
+                        Group::make()
+                            ->schema([
+                                TextInput::make('parent_national_id')
+                                    ->label('Parent / Guardian National ID'),
+
+                                DatePicker::make('parent_nid_expiration_date')
+                                    ->label('Parent / Guardian NID Expiration Date'),
+                            ])->columns(2),
                     ])
                     ->visible(function ($get) {
                         $dob = $get('date_of_birth');
