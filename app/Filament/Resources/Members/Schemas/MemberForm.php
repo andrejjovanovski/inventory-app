@@ -49,6 +49,7 @@ class MemberForm
                                         // Left column: Image
                                         FileUpload::make('image_path')
                                             ->label('Image')
+                                            ->disk('public')
                                             ->directory(fn($get) => 'members/' . ($get('id') ?? 'new') . '/image')
                                             ->maxSize(2048)
                                             ->imageEditor()
@@ -224,10 +225,11 @@ class MemberForm
                     ->schema([
                         FileUpload::make('documents')
                             ->label('Member Documents')
+                            ->disk('public')
                             ->multiple()
                             ->directory(fn($get) => $get('id') ? "members/{$get('id')}/documents" : "members/new/documents")
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(2048)
+                            ->maxSize(10240)
                             ->columnSpan('full')
                             ->openable()
                             ->downloadable()

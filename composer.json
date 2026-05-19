@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "althinect/filament-spatie-roles-permissions": "3.x-dev",
+        "barryvdh/laravel-dompdf": "^3.1",
         "caresome/filament-auth-designer": "^1.0",
         "filament/filament": "^4.0.18",
         "laravel/framework": "^12.30.1",

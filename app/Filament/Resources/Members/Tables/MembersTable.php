@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Members\Tables;
 
 use App\Models\Member;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -10,6 +11,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -17,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
+use Illuminate\Support\Carbon;
 
 class MembersTable
 {
@@ -201,6 +204,7 @@ class MembersTable
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
+                    self::absenceReportAction(),
                     Action::make("toggleActive")
                         ->label(
                             fn(Member $record) => (bool) $record->getAttribute(
@@ -239,5 +243,41 @@ class MembersTable
                     RestoreBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private static function absenceReportAction(): Action
+    {
+        return Action::make("absenceReport")
+            ->label("Absence Report")
+            ->icon("heroicon-o-document-text")
+            ->color("gray")
+            ->modalHeading("Generate absence report")
+            ->modalSubmitActionLabel("Generate PDF")
+            ->schema([
+                DatePicker::make("absence_date")
+                    ->label("Absence date")
+                    ->required()
+                    ->default(now())
+                    ->maxDate(now()),
+            ])
+            ->action(function (array $data, Member $record) {
+                $absenceDate = Carbon::parse($data["absence_date"]);
+                $filename = sprintf(
+                    "absence-report-%s-%s.pdf",
+                    $record->badge_number ?: $record->getKey(),
+                    $absenceDate->format("Y-m-d"),
+                );
+
+                $pdf = Pdf::loadView("pdfs.member-absence-report", [
+                    "absenceDate" => $absenceDate,
+                    "member" => $record,
+                ])->output();
+
+                return response()->streamDownload(
+                    fn () => print($pdf),
+                    $filename,
+                    ["Content-Type" => "application/pdf"],
+                );
+            });
     }
 }
